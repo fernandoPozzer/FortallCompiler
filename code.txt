@@ -1,0 +1,11 @@
+
+/*comentario ola mundo*/
+
+var x, y : inteiro;
+b : logico;
+
+x := 0;
+enquanto x = 10 faca
+x := x / 10
+
+se a senao b
