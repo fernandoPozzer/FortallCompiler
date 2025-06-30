@@ -1,0 +1,3 @@
+programa teste;
+
+var a, b, c, d: inteiro;

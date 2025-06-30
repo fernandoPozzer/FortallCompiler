@@ -28,3 +28,5 @@ while True:
         print(f"({tok.type}, {tok.value})", end = " ")
     else:
         print(f"{tok.type}", end = " ")
+
+print("\n")

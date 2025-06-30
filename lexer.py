@@ -23,6 +23,8 @@ tokens = (
     'IF',
     'ELSE',
     'VAR',
+    'PRINT',
+    'PROGRAM',
     
     # tipos de variaveis
 
@@ -36,7 +38,7 @@ tokens = (
     'EQUALS',
     
     'SEMICOLON',
-    'COMMA'
+    'COMMA',
     
 )
 
@@ -65,8 +67,15 @@ reserved = {
     'fim'     : 'END',
     'var'     : 'VAR',
     'logico'  : 'LOGIC',
-    'inteiro' : 'INT'
+    'inteiro' : 'INT',
+    'escrever': 'PRINT',
+    'programa': 'PROGRAM'
 }
+
+def t_STRING(t):
+    r"'[a-zA-Z0-9_ ]*'"
+    t.value = t.value[1:-1]
+    return t
 
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
@@ -99,3 +108,17 @@ lexer = lex.lex()
 
 class LexError(Exception):
     pass
+
+def check_for_lex_errors(code):
+    
+    lexer.input(code)
+
+    while True:
+        try:
+            tok = lexer.token()
+        except LexError as lex_error:
+            print(f"\nLEX ERROR: {lex_error}\n")
+            return True
+
+        if not tok:
+            return False
