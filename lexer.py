@@ -26,6 +26,7 @@ tokens = (
     'VAR',
     'PRINT',
     'PROGRAM',
+    'READ',
     
     # tipos de variaveis
 
@@ -85,6 +86,7 @@ reserved = {
     'var'     : 'VAR',
     'logico'  : 'VARTYPE',
     'inteiro' : 'VARTYPE',
+    'ler'     : 'READ',
     'escrever': 'PRINT',
     'programa': 'PROGRAM',
     'VERDADEIRO' : 'LOGICVALUE',

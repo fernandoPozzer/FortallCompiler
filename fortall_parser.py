@@ -113,7 +113,35 @@ def p_cond_else(p):
 #################################
 
 def p_cmd(p):
-    '''cmd : ID ATTR id_value'''
+    '''cmd : ID ATTR id_value
+           | WHILE bool_expr DO cond
+           | code_block
+           | READ read_list
+           | PRINT print_list'''
+    pass
+
+def p_read_list(p):
+    '''read_list : LPAREN id_list RPAREN
+                 | empty'''
+    pass
+
+def p_print_list(p):
+    '''print_list : LPAREN elem_print_list RPAREN
+                  | empty'''
+    pass
+
+def p_elem_print_list(p):
+    '''elem_print_list : elem_print other_elem_print'''
+    pass
+
+def p_other_elem_print(p):
+    '''other_elem_print : COMMA elem_print_list
+                        | empty'''
+    pass
+
+def p_elem_print(p):
+    '''elem_print : STRING
+                  | math_expr'''
     pass
 
 def p_bool_expr(p):
@@ -135,7 +163,8 @@ def p_math_expr(p):
     pass
 
 def p_id_value(p):
-    '''id_value : LOGICVALUE'''
+    '''id_value : LOGICVALUE
+                | math_expr'''
     pass
 
 #################################

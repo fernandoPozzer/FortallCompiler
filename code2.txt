@@ -6,8 +6,21 @@ var
     w : inteiro;
 
 inicio
+
+    inicio 
+        b := a;
+    fim;
+
+    ler (a, b, c);
+
+    enquanto a <> b faca
+        inicio
+            a := b;
+        fim;
+
+    escrever (a, b, ' 10');
     
     se a >= b entao
-        a := FALSO;
+        a := x;
 
 fim.
