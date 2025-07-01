@@ -28,8 +28,7 @@ tokens = (
     
     # tipos de variaveis
 
-    'LOGIC',
-    'INT',
+    'VARTYPE',
     'TYPEDEF',
     'ATTR',
 
@@ -39,6 +38,7 @@ tokens = (
     
     'SEMICOLON',
     'COMMA',
+    'PERIOD',
     
 )
 
@@ -48,6 +48,7 @@ t_SEMICOLON = r';'
 t_TYPEDEF   = r':'
 t_ATTR      = r':='
 t_COMMA     = r','
+t_PERIOD    = r'.' 
 
 # operacoes aritmeticas
 
@@ -66,8 +67,8 @@ reserved = {
     'inicio'  : 'BEGIN',
     'fim'     : 'END',
     'var'     : 'VAR',
-    'logico'  : 'LOGIC',
-    'inteiro' : 'INT',
+    'logico'  : 'VARTYPE',
+    'inteiro' : 'VARTYPE',
     'escrever': 'PRINT',
     'programa': 'PROGRAM'
 }

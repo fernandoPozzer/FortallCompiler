@@ -1,3 +1,10 @@
 programa teste;
 
-var a, b, c, d: inteiro;
+var
+    a, b, c, d: inteiro;
+    log_a, log_b: logico;
+    w : inteiro;
+
+inicio
+
+fim.

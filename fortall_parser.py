@@ -42,21 +42,56 @@ memory = {}
 #     p[0] = ('var', p[1])
 
 def p_program(p):
-    '''begin_code : PROGRAM ID SEMICOLON stmt_list'''
-    print("BEGIN")
+    '''first_rule : PROGRAM ID SEMICOLON code_start'''
     pass
 
 def p_stmt_list(p):
-    '''stmt_list : decl'''
+    '''code_start : decl code_block PERIOD
+                  | code_block PERIOD'''
     pass
-    
+
+#################################
+# Declaracao de variaveis
+#################################
+
 def p_decl(p):
     '''decl : VAR var_list'''
     pass
 
 def p_var_list(p):
-    '''var_list : id_list TYPEDEF INT SEMICOLON'''
-    print(p[1])
+    '''var_list : id_list TYPEDEF VARTYPE SEMICOLON another_var_list'''
+    # print(p[1])
+
+    for decl_var in p[1]:
+        if p[3] == 'inteiro':
+            memory[decl_var] = ['inteiro', 0]
+        else: # logico
+            memory[decl_var] = ['logico', 0]
+
+def p_another_var_list(p):
+    '''another_var_list : var_list
+                        | empty'''
+    pass
+
+#################################
+# Bloco de codigo (inicio ... fim)
+#################################
+
+def p_code_block(p):
+    '''code_block : BEGIN code_block_end'''
+    pass
+
+def p_code_block_end(p):
+    '''code_block_end : cmd_list END'''
+    pass
+
+def p_cmd_list(p):
+    '''cmd_list : empty'''
+    pass
+
+#################################
+# Lista de Variaveis
+#################################
 
 def p_id_list(p):
     '''id_list : ID other_ids'''
@@ -82,6 +117,7 @@ def p_print(p):
     print(p[3])
 
 parser = yacc.yacc()
+# print(memory['a'])
 
 def eval_expr(expr):
     if expr[0] == 'num':
