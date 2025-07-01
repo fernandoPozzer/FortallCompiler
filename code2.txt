@@ -21,7 +21,7 @@ inicio
     escrever (a, b, ' 10');
     
     se a >= b entao
-        a := x
+        a := 1 * (1 - 2) / b
     senao a := x;
 
 fim.

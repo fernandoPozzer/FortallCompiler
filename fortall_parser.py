@@ -159,7 +159,34 @@ def p_bool_op(p):
     pass
 
 def p_math_expr(p):
-    '''math_expr : ID'''
+    '''math_expr : value_or_prod plus_expr'''
+    pass
+
+def p_plus_expr(p):
+    '''plus_expr : PLUS value_or_prod plus_expr
+                 | MINUS value_or_prod plus_expr
+                 | empty'''
+    pass
+
+def p_value_or_prod(p):
+    '''value_or_prod : neg_pos_value prod_expr'''
+    pass
+
+def p_prod_expr(p):
+    '''prod_expr : MULT neg_pos_value prod_expr
+                 | DIV neg_pos_value prod_expr
+                 | empty'''
+    pass
+
+def p_neg_pos_value(p):
+    '''neg_pos_value : MINUS expr_value
+                     | expr_value'''
+    pass
+
+def p_expr_value(p):
+    '''expr_value : LPAREN math_expr RPAREN
+                  | ID
+                  | NUM'''
     pass
 
 def p_id_value(p):
