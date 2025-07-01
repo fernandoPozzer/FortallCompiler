@@ -1,6 +1,8 @@
 import ply.yacc as yacc
 from lexer import tokens
 
+from execute_functions import *
+
 memory = {}
 
 # # Programa é uma lista de comandos
@@ -167,9 +169,25 @@ def p_math_expr(p):
     if p[2] is None:
         p[0] = p[1]
     else:
-        p[0] = (p[1], p[2])
+        # plus_expr já é uma AST com '+' ou '-' como raiz
+        # precisamos inserir p[1] como o operando esquerdo mais à esquerda
+
+        # Exemplo: p[1] = a, p[2] = ('+', b, c)
+        op = p[2][0]
+
+        if len(p[2]) == 2:
+            # ('+', b) → vira ('+', a, b)
+            p[0] = (op, p[1], p[2][1])
+        else:
+            # ('+', b, c) → encadeia: (op, a, subtree)
+            p[0] = (op, p[1], p[2][2])  # p[2][1] já está em p[1]
+            atual = p[0]
+            for i in range(3, len(p[2])):
+                atual = (p[2][i - 2], atual, p[2][i])
+            p[0] = atual
 
     print(f"math_expr: {p[0]}")
+    print(f"RESULTADO: {avaliar_ast(p[0])}")
 
 def p_plus_expr(p):
     '''plus_expr : PLUS value_or_prod plus_expr
@@ -177,10 +195,16 @@ def p_plus_expr(p):
                  | empty'''
 
     if len(p) == 4:
-        if p[3] is None:
-            p[0] = (p[1].lower(), p[2])
+        op = '+' if p[1] == '+' else '-'
+        left = p[2]
+        right = p[3]
+
+        if right is None:
+            p[0] = (op, left)
         else:
-            p[0] = (p[1].lower(), p[2], p[3])
+            p[0] = (op, left, right)
+    else:
+        p[0] = None
 
 def p_value_or_prod(p):
     '''value_or_prod : neg_pos_value prod_expr'''
@@ -188,21 +212,37 @@ def p_value_or_prod(p):
     if p[2] is None:
         p[0] = p[1]
     else:
-        p[0] = ('value_and_prod', p[1], p[2])
+        # prod_expr é uma cadeia como: ('*', b, ('/', c))
+        # Devemos aplicar p[1] como "esquerda" da primeira operação
+        op, *rest = p[2]
+
+        # Se prod_expr tem só dois elementos: ('*', b)
+        if len(rest) == 1:
+            p[0] = (op, p[1], rest[0])
+        else:
+            # é do tipo ('*', b, outra coisa)
+            p[0] = (op, p[1], rest[0])
+            atual = p[0]
+            for i in range(1, len(rest), 2):
+                atual = (rest[i-1], atual, rest[i])
+            p[0] = atual
 
 def p_prod_expr(p):
     '''prod_expr : MULT neg_pos_value prod_expr
                  | DIV neg_pos_value prod_expr
                  | empty'''
+
     if len(p) == 4:
-        op = p[1].lower()
+        op = '*' if p[1] == '*' else '/'
+        left = p[2]
+        right = p[3]
 
-        if p[3] is None:
-            p[0] = (op, p[2])
+        if right is None:
+            p[0] = (op, left)
         else:
-            p[0] = (op, p[2], p[3])
-
-    # print(f"prod_expr: {p[0]}")
+            p[0] = (op, left, right)
+    else:
+        p[0] = None
 
 def p_neg_pos_value(p):
     '''neg_pos_value : MINUS expr_value
