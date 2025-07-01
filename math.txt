@@ -2,7 +2,7 @@ programa matematica;
 
 inicio
 
-    escrever(1 + 5, ' > esperado: ', 6);
+    escrever(1 + 5, ' -> esperado: ', 6);
     escrever(1 + 2 * 5, ' -> esperado: ', 11);
     escrever(1 + (-2) * 5, ' -> esperado: ', -9);
     escrever(9 / 2, ' -> esperado: ', 4);

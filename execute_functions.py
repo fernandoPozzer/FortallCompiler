@@ -10,23 +10,23 @@ def imprime_ast(ast, nivel=0):
         print(f"{indent}{repr(ast)}")
 
 def avaliar_ast(ast):
+    from fortall_parser import memory
+
     if isinstance(ast, tuple):
         op = ast[0]
 
-        # números
         if op == 'num':
             return ast[1]
 
-        # variáveis (não tratadas aqui)
         elif op == 'id':
-            # raise ValueError(f"Variável não definida: {ast[1]}")
-            pass
+            if ast[1] not in memory: # var nao declarada
+                raise SemanticError(f"variável {ast[1]} não foi previamente declarada.")
+            
+            return memory[ast[1]][1]
 
-        # negação
         elif op == 'neg':
             return -avaliar_ast(ast[1])
 
-        # operadores binários
         elif op in ('+', '-', '*', '/'):
             left = avaliar_ast(ast[1])
             right = avaliar_ast(ast[2])
@@ -44,7 +44,7 @@ def avaliar_ast(ast):
         else:
             raise ValueError(f"Operação desconhecida: {op}")
     else:
-        return ast  # valor literal
+        return ast
 
 def exec_print(p):
     print("\n\nFORTALL-PRINT: ", end='')
@@ -57,5 +57,8 @@ def exec_print(p):
             # pass
 
     print("")
+
+class SemanticError(Exception):
+    pass
 
     

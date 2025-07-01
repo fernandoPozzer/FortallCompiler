@@ -70,6 +70,8 @@ def p_var_list(p):
         else: # logico
             memory[decl_var] = ['logico', 0]
 
+    print(f"declaration: {memory}")
+
 def p_another_var_list(p):
     '''another_var_list : var_list
                         | empty'''
