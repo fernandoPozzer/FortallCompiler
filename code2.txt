@@ -6,5 +6,5 @@ var
     w : inteiro;
 
 inicio
-
+    a := FALSO;
 fim.

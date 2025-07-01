@@ -86,7 +86,34 @@ def p_code_block_end(p):
     pass
 
 def p_cmd_list(p):
-    '''cmd_list : empty'''
+    '''cmd_list : cond SEMICOLON other_cmds'''
+    pass
+
+def p_other_cmds(p):
+    '''other_cmds : cmd_list
+                  | empty'''
+    pass
+
+#################################
+# Condicional
+#################################
+
+def p_cond(p):
+    '''cond : IF THEN cond cond_else
+            | cmd'''
+    pass
+
+def p_cond_else(p):
+    '''cond_else : cond
+                 | empty'''
+    pass
+
+def p_cmd(p):
+    '''cmd : ID ATTR id_value'''
+    pass
+
+def p_id_value(p):
+    '''id_value : LOGICVALUE'''
     pass
 
 #################################

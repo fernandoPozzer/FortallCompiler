@@ -22,6 +22,7 @@ tokens = (
     'END',
     'IF',
     'ELSE',
+    'THEN',
     'VAR',
     'PRINT',
     'PROGRAM',
@@ -31,6 +32,8 @@ tokens = (
     'VARTYPE',
     'TYPEDEF',
     'ATTR',
+
+    'LOGICVALUE',
 
 
     'LT',
@@ -64,13 +67,16 @@ reserved = {
     'faca'    : 'DO',
     'se'      : 'IF',
     'senao'   : 'ELSE',
+    'entao'   : 'THEN',
     'inicio'  : 'BEGIN',
     'fim'     : 'END',
     'var'     : 'VAR',
     'logico'  : 'VARTYPE',
     'inteiro' : 'VARTYPE',
     'escrever': 'PRINT',
-    'programa': 'PROGRAM'
+    'programa': 'PROGRAM',
+    'VERDADEIRO' : 'LOGICVALUE',
+    'FALSO' : 'LOGICVALUE',
 }
 
 def t_STRING(t):
