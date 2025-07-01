@@ -21,6 +21,7 @@ inicio
     escrever (a, b, ' 10');
     
     se a >= b entao
-        a := x;
+        a := x
+    senao a := x;
 
 fim.

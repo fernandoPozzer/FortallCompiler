@@ -104,7 +104,7 @@ def p_cond(p):
     pass
 
 def p_cond_else(p):
-    '''cond_else : cond
+    '''cond_else : ELSE cond
                  | empty'''
     pass
 
