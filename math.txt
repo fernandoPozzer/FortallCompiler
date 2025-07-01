@@ -1,0 +1,6 @@
+programa teste;
+
+inicio
+
+    a := 10 * 2;
+fim.

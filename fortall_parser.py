@@ -118,6 +118,9 @@ def p_cmd(p):
            | code_block
            | READ read_list
            | PRINT print_list'''
+    # for i in p:
+    #     print(i, end='')
+    # print()
     pass
 
 def p_read_list(p):
@@ -160,39 +163,81 @@ def p_bool_op(p):
 
 def p_math_expr(p):
     '''math_expr : value_or_prod plus_expr'''
-    pass
+    
+    if p[2] is None:
+        p[0] = p[1]
+    else:
+        p[0] = (p[1], p[2])
+
+    print(f"math_expr: {p[0]}")
 
 def p_plus_expr(p):
     '''plus_expr : PLUS value_or_prod plus_expr
                  | MINUS value_or_prod plus_expr
                  | empty'''
-    pass
+
+    if len(p) == 4:
+        if p[3] is None:
+            p[0] = (p[1].lower(), p[2])
+        else:
+            p[0] = (p[1].lower(), p[2], p[3])
 
 def p_value_or_prod(p):
     '''value_or_prod : neg_pos_value prod_expr'''
-    pass
+
+    if p[2] is None:
+        p[0] = p[1]
+    else:
+        p[0] = ('value_and_prod', p[1], p[2])
 
 def p_prod_expr(p):
     '''prod_expr : MULT neg_pos_value prod_expr
                  | DIV neg_pos_value prod_expr
                  | empty'''
-    pass
+    if len(p) == 4:
+        op = p[1].lower()
+
+        if p[3] is None:
+            p[0] = (op, p[2])
+        else:
+            p[0] = (op, p[2], p[3])
+
+    # print(f"prod_expr: {p[0]}")
 
 def p_neg_pos_value(p):
     '''neg_pos_value : MINUS expr_value
                      | expr_value'''
-    pass
+    if len(p) == 3:
+        p[0] = ('neg', p[2])
+    else:
+        p[0] = p[1]
+    
+    # print(f"neg_pos_value: {p[0]}")
 
 def p_expr_value(p):
     '''expr_value : LPAREN math_expr RPAREN
                   | ID
                   | NUM'''
-    pass
+    if len(p) == 4:
+        p[0] = p[2]
+    elif isinstance(p[1], str):
+        p[0] = ('id', p[1])
+    else:
+        p[0] = ('num', p[1])
+
+    # print(f"expr_value: {p[0]}")
 
 def p_id_value(p):
     '''id_value : LOGICVALUE
                 | math_expr'''
-    pass
+    if p[1] == 'VERDADEIRO':
+        p[0] = ('logic', 1)
+    elif p[1] == 'FALSO':
+        p[0] = ('logic', 0)
+    else:
+        p[0] = ('math_expr', p[1])
+
+    # print(f"id_value: {p[0]}")
 
 #################################
 # Lista de Variaveis
@@ -217,9 +262,9 @@ def p_empty(p):
 def p_error(p):
     print(f"Erro de sintaxe no token '{p.value}' (tipo: {p.type}) na linha {p.lineno}")
 
-def p_print(p):
-    '''print_expr : PRINT LPAREN STRING RPAREN SEMICOLON'''
-    print(p[3])
+# def p_print(p):
+#     '''print_expr : PRINT LPAREN STRING RPAREN SEMICOLON'''
+#     print(p[3])
 
 parser = yacc.yacc()
 # print(memory['a'])

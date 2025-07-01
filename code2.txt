@@ -15,13 +15,13 @@ inicio
 
     enquanto a <> b faca
         inicio
-            a := b;
+            a := VERDADEIRO;
         fim;
 
     escrever (a, b, ' 10');
     
     se a >= b entao
-        a := 1 * (1 - 2) / b
+        a := 1 * (1 - 2) / (-10)
     senao a := x;
 
 fim.
