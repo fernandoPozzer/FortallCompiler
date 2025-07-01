@@ -6,5 +6,8 @@ var
     w : inteiro;
 
 inicio
-    a := FALSO;
+    
+    se a >= b entao
+        a := FALSO;
+
 fim.

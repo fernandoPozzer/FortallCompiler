@@ -35,8 +35,13 @@ tokens = (
 
     'LOGICVALUE',
 
-
     'LT',
+    'LEQ',
+
+    'GT',
+    'GEQ',
+
+    'DIFF',
     'EQUALS',
     
     'SEMICOLON',
@@ -46,12 +51,19 @@ tokens = (
 )
 
 t_LT        = r'<'
+t_LEQ       = r'<='
+
+t_GT        = r'>'
+t_GEQ       = r'>='
+
+t_DIFF      = r'<>'
 t_EQUALS    = r'='
+
 t_SEMICOLON = r';'
 t_TYPEDEF   = r':'
 t_ATTR      = r':='
 t_COMMA     = r','
-t_PERIOD    = r'.' 
+t_PERIOD    = r'\.' 
 
 # operacoes aritmeticas
 

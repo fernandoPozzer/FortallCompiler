@@ -99,7 +99,7 @@ def p_other_cmds(p):
 #################################
 
 def p_cond(p):
-    '''cond : IF THEN cond cond_else
+    '''cond : IF bool_expr THEN cond cond_else
             | cmd'''
     pass
 
@@ -108,8 +108,30 @@ def p_cond_else(p):
                  | empty'''
     pass
 
+#################################
+# Comandos
+#################################
+
 def p_cmd(p):
     '''cmd : ID ATTR id_value'''
+    pass
+
+def p_bool_expr(p):
+    '''bool_expr : math_expr bool_op'''
+    pass
+
+def p_bool_op(p):
+    '''bool_op : EQUALS math_expr
+               | DIFF math_expr
+               | LT math_expr
+               | LEQ math_expr
+               | GT math_expr
+               | GEQ math_expr
+               | empty'''
+    pass
+
+def p_math_expr(p):
+    '''math_expr : ID'''
     pass
 
 def p_id_value(p):
