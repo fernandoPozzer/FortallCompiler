@@ -93,11 +93,6 @@ reserved = {
     'FALSO' : 'LOGICVALUE',
 }
 
-def t_STRING(t):
-    r"'[a-zA-Z0-9_ ]*'"
-    t.value = t.value[1:-1]
-    return t
-
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
     t.type = reserved.get(t.value, 'ID')
@@ -106,6 +101,11 @@ def t_ID(t):
 def t_error_variable(t):
     r'[0-9]+[a-zA-Z_]+'
     raise LexError(f"É var ou num? {t.value} (linha {t.lineno})")
+
+def t_STRING(t):
+    r"'[a-zA-Z0-9_ <>:-]*'"
+    t.value = t.value[1:-1]
+    return t
 
 def t_NUM(t):
     r'\d+'

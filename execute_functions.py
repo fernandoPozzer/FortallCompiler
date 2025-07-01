@@ -18,8 +18,9 @@ def avaliar_ast(ast):
             return ast[1]
 
         # variáveis (não tratadas aqui)
-        elif op == 'var':
-            raise ValueError(f"Variável não definida: {ast[1]}")
+        elif op == 'id':
+            # raise ValueError(f"Variável não definida: {ast[1]}")
+            pass
 
         # negação
         elif op == 'neg':
@@ -32,7 +33,7 @@ def avaliar_ast(ast):
             if op == '+': return left + right
             if op == '-': return left - right
             if op == '*': return left * right
-            if op == '/': return left / right
+            if op == '/': return int(left / right)
 
         # valor composto com produto (ex: value_or_prod)
         elif op == 'value_and_prod':
@@ -44,5 +45,17 @@ def avaliar_ast(ast):
             raise ValueError(f"Operação desconhecida: {op}")
     else:
         return ast  # valor literal
+
+def exec_print(p):
+    print("\n\nFORTALL-PRINT: ", end='')
+    for part in p:
+        if part[0] == 'str':
+            print(part[1], end='')
+        else:
+            # print(part)
+            print(avaliar_ast(part), end='')
+            # pass
+
+    print("")
 
     

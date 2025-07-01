@@ -1,11 +1,10 @@
+programa matematica;
 
-/*comentario ola mundo*/
+inicio
 
-var x, y : inteiro;
-b : logico;
+    escrever(1 + 5 + 3, ' > esperado: ', 3);
+    escrever(1 + 2 * 5, ' -> esperado: ', 11);
+    escrever(1 + (-2) * 5, ' -> esperado: ', -9);
+    escrever(9 / 2, ' -> esperado: ', 4);
 
-x := 0;
-enquanto x = 10 faca
-x := x / 10
-
-se a senao b
+fim.

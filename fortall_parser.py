@@ -120,38 +120,78 @@ def p_cmd(p):
            | code_block
            | READ read_list
            | PRINT print_list'''
-    # for i in p:
-    #     print(i, end='')
-    # print()
-    pass
+    
+    if len(p) == 2: # code_block
+        p[0] = p[1]
+
+    elif len(p) == 3: # read or print
+        p[0] = p[2]
+        exec_print(p[2][1])
+
+    elif len(p) == 4: # while
+        p[0] = ('while', p[2], p[4])
+
+    print(f"CMD: {p[0]}")
+
 
 def p_read_list(p):
     '''read_list : LPAREN id_list RPAREN
                  | empty'''
-    pass
+    if len(p) == 4:
+        p[0] = ('read', p[2])
+    else:
+        p[0] = ('read', [])
+
+    print(f"READ: {p[0]}")
 
 def p_print_list(p):
     '''print_list : LPAREN elem_print_list RPAREN
                   | empty'''
-    pass
+
+    if len(p) == 4:
+        p[0] = ('print', p[2])
+    else:
+        p[0] = ('print', [])
+
+    print(f"PRINT-LIST: {p[0]}")
 
 def p_elem_print_list(p):
     '''elem_print_list : elem_print other_elem_print'''
-    pass
+    
+    p[0] = [p[1]] + p[2]
 
 def p_other_elem_print(p):
     '''other_elem_print : COMMA elem_print_list
                         | empty'''
-    pass
+
+    if len(p) == 3:
+        p[0] = p[2]
+    else:
+        p[0] = []
 
 def p_elem_print(p):
     '''elem_print : STRING
                   | math_expr'''
-    pass
+
+    if isinstance(p[1], str):
+        p[0] = ('str', p[1])
+    else:
+        p[0] = p[1]
+
+#################################
+# Expressoes booleanas
+#################################
 
 def p_bool_expr(p):
     '''bool_expr : math_expr bool_op'''
-    pass
+    
+    if p[2] is None:
+        p[0] = p[1]
+    else:
+        op, right = p[2]
+        p[0] = (op, p[1], right)
+    
+    print(f"bool_expr: {p[0]}")
 
 def p_bool_op(p):
     '''bool_op : EQUALS math_expr
@@ -161,7 +201,15 @@ def p_bool_op(p):
                | GT math_expr
                | GEQ math_expr
                | empty'''
-    pass
+
+    if len(p) == 3:
+        p[0] = (p[1], p[2])
+    else:
+        p[0] = None
+
+#################################
+# Expressoes matematicas
+#################################
 
 def p_math_expr(p):
     '''math_expr : value_or_prod plus_expr'''
@@ -186,8 +234,8 @@ def p_math_expr(p):
                 atual = (p[2][i - 2], atual, p[2][i])
             p[0] = atual
 
-    print(f"math_expr: {p[0]}")
-    print(f"RESULTADO: {avaliar_ast(p[0])}")
+    # print(f"math_expr: {p[0]}")
+    # print(f"RESULTADO: {avaliar_ast(p[0])}")
 
 def p_plus_expr(p):
     '''plus_expr : PLUS value_or_prod plus_expr
