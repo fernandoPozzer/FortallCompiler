@@ -5,9 +5,9 @@ aa, bb: logico;
 aaa : inteiro;
 
 inicio
-    enquanto 1 faca
-        inicio
-            escrever(a);
-            a := a + 1;
-        fim;
+    enquanto VERDADEIRO faca
+    inicio
+        a := 1 + 1;
+        escrever(10);
+    fim;
 fim.

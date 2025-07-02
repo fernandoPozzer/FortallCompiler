@@ -1,5 +1,7 @@
 programa matematica;
 
+
+
 inicio
 
     escrever(1 + 5, ' -> esperado: ', 6);
