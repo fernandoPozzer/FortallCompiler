@@ -5,52 +5,21 @@ from execute_functions import *
 
 memory = {}
 
-# # Programa é uma lista de comandos
-# def p_program(p):
-#     '''program : stmt_list'''
-#     for stmt in p[1]:
-#         execute(stmt)
-
-# def p_stmt_list(p):
-#     '''stmt_list : stmt stmt_list
-#                  | stmt'''
-#     if len(p) == 3:
-#         p[0] = [p[1]] + p[2]
-#     else:
-#         p[0] = [p[1]]
-
-# def p_stmt_assign(p):
-#     '''stmt : ID EQUALS expr SEMI'''
-#     p[0] = ('assign', p[1], p[3])
-
-# def p_stmt_while(p):
-#     '''stmt : WHILE LPAREN condition RPAREN LBRACE stmt_list RBRACE'''
-#     p[0] = ('while', p[3], p[6])
-
-# def p_condition(p):
-#     '''condition : expr LT expr'''
-#     p[0] = ('lt', p[1], p[3])
-
-# def p_expr_plus(p):
-#     '''expr : expr PLUS expr'''
-#     p[0] = ('plus', p[1], p[3])
-
-# def p_expr_num(p):
-#     '''expr : NUM'''
-#     p[0] = ('num', p[1])
-
-# def p_expr_var(p):
-#     '''expr : ID'''
-#     p[0] = ('var', p[1])
-
 def p_program(p):
     '''first_rule : PROGRAM ID SEMICOLON code_start'''
-    pass
+    p[0] = p[4]
+    print(p[0])
+    execute(p[0])
+    print(f"MEMORIA APOS FIM: {memory}")
 
 def p_stmt_list(p):
     '''code_start : decl code_block PERIOD
                   | code_block PERIOD'''
-    pass
+
+    if len(p) == 4 and p[1] is not None: # com decl
+        p[0] = (p[1], p[2])
+    else:
+        p[0] = p[2]
 
 #################################
 # Declaracao de variaveis
@@ -62,7 +31,6 @@ def p_decl(p):
 
 def p_var_list(p):
     '''var_list : id_list TYPEDEF VARTYPE SEMICOLON another_var_list'''
-    # print(p[1])
 
     for decl_var in p[1]:
         if p[3] == 'inteiro':
@@ -75,7 +43,10 @@ def p_var_list(p):
 def p_another_var_list(p):
     '''another_var_list : var_list
                         | empty'''
-    pass
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = []
 
 #################################
 # Bloco de codigo (inicio ... fim)
@@ -83,20 +54,29 @@ def p_another_var_list(p):
 
 def p_code_block(p):
     '''code_block : BEGIN code_block_end'''
-    pass
+    p[0] = ('block', p[2])
+    # print(f"code_block: {p[0]}")
 
 def p_code_block_end(p):
     '''code_block_end : cmd_list END'''
-    pass
+    p[0] = p[1]
+    # print(f"code_block_end: {p[0]}")
 
 def p_cmd_list(p):
     '''cmd_list : cond SEMICOLON other_cmds'''
-    pass
+    if p[3] is not None:
+        p[0] = [p[1]] + p[3]
+    else:
+        p[0] = [p[1]]
 
 def p_other_cmds(p):
     '''other_cmds : cmd_list
                   | empty'''
-    pass
+    if len(p) == 2:
+        if p[1] is None:
+            p[0] = []
+        else:
+            p[0] = p[1]
 
 #################################
 # Condicional
@@ -105,12 +85,24 @@ def p_other_cmds(p):
 def p_cond(p):
     '''cond : IF bool_expr THEN cond cond_else
             | cmd'''
-    pass
+
+    if len(p) == 6:
+        condition = p[2]
+        then_block = p[4]
+        else_block = p[5]
+        p[0] = ('if', condition, then_block, else_block)
+    else:
+        p[0] = p[1]
+    
+    # print(f"COND: {p[0]}")
 
 def p_cond_else(p):
     '''cond_else : ELSE cond
                  | empty'''
-    pass
+    if len(p) == 3:
+        p[0] = p[2]
+    else:
+        p[0] = None
 
 #################################
 # Comandos
@@ -128,12 +120,16 @@ def p_cmd(p):
 
     elif len(p) == 3: # read or print
         p[0] = p[2]
-        exec_print(p[2][1])
+        # exec_print(p[2][1])
+    
+    elif len(p) == 4: # attr
+        p[0] = (p[2], p[1], p[3])
+        # memory[p[1]][1] = avaliar_ast(p[3])
 
-    elif len(p) == 4: # while
+    elif len(p) == 5: # while
         p[0] = ('while', p[2], p[4])
 
-    print(f"CMD: {p[0]}")
+    # print(f"CMD: {p[0]}")
 
 
 def p_read_list(p):
@@ -144,7 +140,7 @@ def p_read_list(p):
     else:
         p[0] = ('read', [])
 
-    print(f"READ: {p[0]}")
+    # print(f"READ: {p[0]}")
 
 def p_print_list(p):
     '''print_list : LPAREN elem_print_list RPAREN
@@ -155,7 +151,7 @@ def p_print_list(p):
     else:
         p[0] = ('print', [])
 
-    print(f"PRINT-LIST: {p[0]}")
+    # print(f"PRINT-LIST: {p[0]}")
 
 def p_elem_print_list(p):
     '''elem_print_list : elem_print other_elem_print'''
@@ -193,7 +189,7 @@ def p_bool_expr(p):
         op, right = p[2]
         p[0] = (op, p[1], right)
     
-    print(f"bool_expr: {p[0]}")
+    # print(f"bool_expr: {p[0]}")
 
 def p_bool_op(p):
     '''bool_op : EQUALS math_expr
@@ -325,9 +321,7 @@ def p_id_value(p):
     elif p[1] == 'FALSO':
         p[0] = ('logic', 0)
     else:
-        p[0] = ('math_expr', p[1])
-
-    # print(f"id_value: {p[0]}")
+        p[0] = p[1]
 
 #################################
 # Lista de Variaveis
@@ -357,27 +351,112 @@ def p_error(p):
 #     print(p[3])
 
 parser = yacc.yacc()
-# print(memory['a'])
 
-def eval_expr(expr):
+# def eval_expr(expr):
+#     if expr[0] == 'num':
+#         return expr[1]
+#     elif expr[0] == 'var':
+#         return memory.get(expr[1], 0)
+#     elif expr[0] == 'plus':
+#         return eval_expr(expr[1]) + eval_expr(expr[2])
+
+def get_value(math_expr):
+    return avaliar_ast(math_expr)
+
+def eval_condition(bool_expr):
+    if bool_expr[0] == '<':
+        return get_value(bool_expr[1]) < get_value(bool_expr[2])
+
+    if bool_expr[0] == '>':
+        return get_value(bool_expr[1]) > get_value(bool_expr[2])
+    
+    if bool_expr[0] == '<>':
+        return get_value(bool_expr[1]) != get_value(bool_expr[2])
+
+    if bool_expr[0] == '<=':
+        return get_value(bool_expr[1]) <= get_value(bool_expr[2])
+
+    if bool_expr[0] == '>=':
+        return get_value(bool_expr[1]) >= get_value(bool_expr[2])
+
+    if bool_expr[0] == '=':
+        return get_value(bool_expr[1]) == get_value(bool_expr[2])
+
+    return get_value(bool_expr[1]) != 0
+
+# def execute(p):
+
+#     print(f"\nEXEC: {p}")
+
+#     if p is None:
+#         return
+
+#     if p[0] == 'block':
+#         print(p[1])
+#         for cmd in p[1]:
+#             execute(p[1])
+
+def avaliar_expr(expr):
+
     if expr[0] == 'num':
         return expr[1]
-    elif expr[0] == 'var':
+    elif expr[0] == 'id':
         return memory.get(expr[1], 0)
-    elif expr[0] == 'plus':
-        return eval_expr(expr[1]) + eval_expr(expr[2])
+    elif expr[0] == '=':
+        return avaliar_expr(expr[1]) == avaliar_expr(expr[2])
+    elif expr[0] == '<':
+        return avaliar_expr(expr[1]) < avaliar_expr(expr[2])
+    elif expr[0] == '+':
+        return avaliar_expr(expr[1]) + avaliar_expr(expr[2])
+    elif expr[0] == '-':
+        return avaliar_expr(expr[1]) - avaliar_expr(expr[2])
+    elif expr[0] == '*':
+        return avaliar_expr(expr[1]) * avaliar_expr(expr[2])
+    elif expr[0] == '/':
+        return avaliar_expr(expr[1]) / avaliar_expr(expr[2])
+    elif expr[0] == 'neg':
+        return -avaliar_expr(expr[1])
+    else:
+        raise Exception(f"Expressão desconhecida: {expr}")
 
-def eval_condition(cond):
-    if cond[0] == 'lt':
-        return eval_expr(cond[1]) < eval_expr(cond[2])
+def execute_cmd(cmd):
+    op = cmd[0]
 
-def execute(stmt):
-    if stmt[0] == 'assign':
-        _, var, value_expr = stmt
-        memory[var] = eval_expr(value_expr)
-    elif stmt[0] == 'while':
-        print(f"stmt: {stmt}")
-        _, cond, block = stmt
-        while eval_condition(cond):
-            for s in block:
-                execute(s)
+    if op == ':=':
+        var = cmd[1]
+
+        if var not in memory:
+            raise SemanticError(f"Variável {var} não declarada")
+
+        memory[var] = avaliar_expr(cmd[2])
+
+    elif op == 'if':
+        cond = avaliar_expr(cmd[1])
+        if cond:
+            execute_cmd(cmd[2])
+        elif cmd[3] is not None:
+            execute_cmd(cmd[3])
+
+    elif op == 'block':
+        for c in cmd[1]:
+            execute_cmd(c)
+
+    elif op == 'while':
+        print(f"\n\nCOND WHILE: {cmd[1]}\n\n")
+        cond = avaliar_expr(cmd[1])
+        while cond:
+            execute_cmd(cmd[2])
+            cond = avaliar_expr(cmd[1])
+
+    elif op == 'print':
+        exec_print(cmd[1])
+
+    elif op == 'read':
+        exec_read(cmd[1])
+
+def execute(ast):
+    if ast[0] == 'block':
+        for cmd in ast[1]:
+            execute_cmd(cmd)
+    else:
+        execute_cmd(ast)

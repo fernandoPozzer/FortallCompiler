@@ -1,8 +1,13 @@
 programa matematica;
 
 var a, b, c: inteiro;
+aa, bb: logico;
+aaa : inteiro;
 
 inicio
-
-    escrever (w);
+    enquanto 1 faca
+        inicio
+            escrever(a);
+            a := a + 1;
+        fim;
 fim.

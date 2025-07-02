@@ -1,13 +1,3 @@
-def imprime_ast(ast, nivel=0):
-    indent = '  ' * nivel  # 2 espaços por nível
-    
-    if isinstance(ast, tuple):
-        print(f"{indent}('{ast[0]}',")
-        for filho in ast[1:]:
-            imprime_ast(filho, nivel + 1)
-        print(f"{indent})")
-    else:
-        print(f"{indent}{repr(ast)}")
 
 def avaliar_ast(ast):
     from fortall_parser import memory
@@ -47,16 +37,30 @@ def avaliar_ast(ast):
         return ast
 
 def exec_print(p):
-    print("\n\nFORTALL-PRINT: ", end='')
     for part in p:
         if part[0] == 'str':
             print(part[1], end='')
         else:
             # print(part)
             print(avaliar_ast(part), end='')
-            # pass
 
     print("")
+
+def exec_read(p):
+    from fortall_parser import memory
+
+    for i in range(len(p)):
+        read_value = int(input())
+
+        var = p[i]
+
+        if var not in memory:
+            raise SemanticError(f"Variável {var} não declarada")
+
+        memory[var] = read_value
+
+def execute_code(p):
+    pass
 
 class SemanticError(Exception):
     pass
