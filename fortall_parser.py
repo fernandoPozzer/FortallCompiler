@@ -199,72 +199,57 @@ def p_bool_op(p):
 
 def p_math_expr(p):
     '''math_expr : value_or_prod plus_expr'''
-    
     if p[2] is None:
         p[0] = p[1]
     else:
-
-        op = p[2][0]
-
-        if len(p[2]) == 2:
-            p[0] = (op, p[1], p[2][1])
+        if len(p[2]) == 3:
+            op, left, right = p[2]
+            p[0] = (op, p[1], p[2])
         else:
-            p[0] = (op, p[1], p[2][2])
-            atual = p[0]
-            for i in range(3, len(p[2])):
-                atual = (p[2][i - 2], atual, p[2][i])
-            p[0] = atual
+            op, left = p[2]
+            p[0] = (op, p[1], left)
 
 def p_plus_expr(p):
     '''plus_expr : PLUS value_or_prod plus_expr
                  | MINUS value_or_prod plus_expr
                  | empty'''
 
-    if len(p) == 4:
-        op = '+' if p[1] == '+' else '-'
-        left = p[2]
-        right = p[3]
-
-        if right is None:
-            p[0] = (op, left)
-        else:
-            p[0] = (op, left, right)
-    else:
+    if len(p) == 2:
         p[0] = None
+    elif p[3] is None:
+        p[0] = (p[1], p[2])
+    else:
+        if len(p[3]) > 2:
+            p[0] = (p[1], p[2], p[3])
+        else:
+            p[0] = (p[1], p[2], p[3][1])
+        
 
 def p_value_or_prod(p):
     '''value_or_prod : neg_pos_value prod_expr'''
-
     if p[2] is None:
         p[0] = p[1]
     else:
-        op, *rest = p[2]
-
-        if len(rest) == 1:
-            p[0] = (op, p[1], rest[0])
+        if len(p[2]) == 3:
+            op, left, right = p[2]
+            p[0] = (op, p[1], p[2])
         else:
-            p[0] = (op, p[1], rest[0])
-            atual = p[0]
-            for i in range(1, len(rest), 2):
-                atual = (rest[i-1], atual, rest[i])
-            p[0] = atual
+            op, left = p[2]
+            p[0] = (op, p[1], left)
 
 def p_prod_expr(p):
     '''prod_expr : MULT neg_pos_value prod_expr
                  | DIV neg_pos_value prod_expr
                  | empty'''
-
-    if len(p) == 4:
-        op = '*' if p[1] == '*' else '/'
-        left = p[2]
-        right = p[3]
-
-        if right is None:
-            p[0] = (op, left)
-        else:
-            p[0] = (op, left, right)
-    else:
+    if len(p) == 2:
         p[0] = None
+    elif p[3] is None:
+        p[0] = (p[1], p[2])
+    else:
+        if len(p[3]) > 2:
+            p[0] = (p[1], p[2], p[3])
+        else:
+            p[0] = (p[1], p[2], p[3][1])
 
 def p_neg_pos_value(p):
     '''neg_pos_value : MINUS expr_value
