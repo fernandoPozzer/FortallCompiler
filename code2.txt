@@ -1,27 +1,14 @@
 programa teste;
 
-var
-    a, b, c, d: inteiro;
-    log_a, log_b: logico;
-    w : inteiro;
+var a, b : inteiro;
 
 inicio
 
-    inicio 
-        b := a;
-    fim;
+    a := 10;
 
-    ler (a, b, c);
-
-    enquanto a <> b faca
-        inicio
-            a := VERDADEIRO;
-        fim;
-
-    escrever (a, b, ' 10');
+    se a > b entao
+        b := 20;
     
-    se a >= b entao
-        a := 1 * (1 - 2) / (-10)
-    senao a := x;
+    escrever(b);
 
 fim.

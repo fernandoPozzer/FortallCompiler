@@ -8,9 +8,9 @@ memory = {}
 def p_program(p):
     '''first_rule : PROGRAM ID SEMICOLON code_start'''
     p[0] = p[4]
-    print(p[0])
+    # print(p[0])
     execute(p[0])
-    print(f"MEMORIA APOS FIM: {memory}")
+    # print(f"MEMORIA APOS FIM: {memory}")
 
 def p_stmt_list(p):
     '''code_start : decl code_block PERIOD
@@ -55,12 +55,10 @@ def p_another_var_list(p):
 def p_code_block(p):
     '''code_block : BEGIN code_block_end'''
     p[0] = ('block', p[2])
-    # print(f"code_block: {p[0]}")
 
 def p_code_block_end(p):
     '''code_block_end : cmd_list END'''
     p[0] = p[1]
-    # print(f"code_block_end: {p[0]}")
 
 def p_cmd_list(p):
     '''cmd_list : cond SEMICOLON other_cmds'''
@@ -93,8 +91,6 @@ def p_cond(p):
         p[0] = ('if', condition, then_block, else_block)
     else:
         p[0] = p[1]
-    
-    # print(f"COND: {p[0]}")
 
 def p_cond_else(p):
     '''cond_else : ELSE cond
@@ -120,17 +116,12 @@ def p_cmd(p):
 
     elif len(p) == 3: # read or print
         p[0] = p[2]
-        # exec_print(p[2][1])
     
     elif len(p) == 4: # attr
         p[0] = (p[2], p[1], p[3])
-        # memory[p[1]][1] = avaliar_ast(p[3])
 
     elif len(p) == 5: # while
         p[0] = ('while', p[2], p[4])
-
-    # print(f"CMD: {p[0]}")
-
 
 def p_read_list(p):
     '''read_list : LPAREN id_list RPAREN
@@ -140,8 +131,6 @@ def p_read_list(p):
     else:
         p[0] = ('read', [])
 
-    # print(f"READ: {p[0]}")
-
 def p_print_list(p):
     '''print_list : LPAREN elem_print_list RPAREN
                   | empty'''
@@ -150,8 +139,6 @@ def p_print_list(p):
         p[0] = ('print', p[2])
     else:
         p[0] = ('print', [])
-
-    # print(f"PRINT-LIST: {p[0]}")
 
 def p_elem_print_list(p):
     '''elem_print_list : elem_print other_elem_print'''
@@ -188,8 +175,6 @@ def p_bool_expr(p):
     else:
         op, right = p[2]
         p[0] = (op, p[1], right)
-    
-    # print(f"bool_expr: {p[0]}")
 
 def p_bool_op(p):
     '''bool_op : EQUALS math_expr
@@ -215,25 +200,17 @@ def p_math_expr(p):
     if p[2] is None:
         p[0] = p[1]
     else:
-        # plus_expr já é uma AST com '+' ou '-' como raiz
-        # precisamos inserir p[1] como o operando esquerdo mais à esquerda
 
-        # Exemplo: p[1] = a, p[2] = ('+', b, c)
         op = p[2][0]
 
         if len(p[2]) == 2:
-            # ('+', b) → vira ('+', a, b)
             p[0] = (op, p[1], p[2][1])
         else:
-            # ('+', b, c) → encadeia: (op, a, subtree)
-            p[0] = (op, p[1], p[2][2])  # p[2][1] já está em p[1]
+            p[0] = (op, p[1], p[2][2])
             atual = p[0]
             for i in range(3, len(p[2])):
                 atual = (p[2][i - 2], atual, p[2][i])
             p[0] = atual
-
-    # print(f"math_expr: {p[0]}")
-    # print(f"RESULTADO: {avaliar_ast(p[0])}")
 
 def p_plus_expr(p):
     '''plus_expr : PLUS value_or_prod plus_expr
@@ -258,15 +235,11 @@ def p_value_or_prod(p):
     if p[2] is None:
         p[0] = p[1]
     else:
-        # prod_expr é uma cadeia como: ('*', b, ('/', c))
-        # Devemos aplicar p[1] como "esquerda" da primeira operação
         op, *rest = p[2]
 
-        # Se prod_expr tem só dois elementos: ('*', b)
         if len(rest) == 1:
             p[0] = (op, p[1], rest[0])
         else:
-            # é do tipo ('*', b, outra coisa)
             p[0] = (op, p[1], rest[0])
             atual = p[0]
             for i in range(1, len(rest), 2):
@@ -297,8 +270,6 @@ def p_neg_pos_value(p):
         p[0] = ('neg', p[2])
     else:
         p[0] = p[1]
-    
-    # print(f"neg_pos_value: {p[0]}")
 
 def p_expr_value(p):
     '''expr_value : LPAREN math_expr RPAREN
@@ -310,8 +281,6 @@ def p_expr_value(p):
         p[0] = ('id', p[1])
     else:
         p[0] = ('num', p[1])
-
-    # print(f"expr_value: {p[0]}")
 
 def p_id_value(p):
     '''id_value : LOGICVALUE
@@ -346,22 +315,7 @@ def p_empty(p):
 def p_error(p):
     print(f"Erro de sintaxe no token '{p.value}' (tipo: {p.type}) na linha {p.lineno}")
 
-# def p_print(p):
-#     '''print_expr : PRINT LPAREN STRING RPAREN SEMICOLON'''
-#     print(p[3])
-
 parser = yacc.yacc()
-
-# def eval_expr(expr):
-#     if expr[0] == 'num':
-#         return expr[1]
-#     elif expr[0] == 'var':
-#         return memory.get(expr[1], 0)
-#     elif expr[0] == 'plus':
-#         return eval_expr(expr[1]) + eval_expr(expr[2])
-
-def get_value(math_expr):
-    return avaliar_ast(math_expr)
 
 def eval_condition(bool_expr):
     if bool_expr[0] == '<':
@@ -384,41 +338,6 @@ def eval_condition(bool_expr):
 
     return get_value(bool_expr[1]) != 0
 
-# def execute(p):
-
-#     print(f"\nEXEC: {p}")
-
-#     if p is None:
-#         return
-
-#     if p[0] == 'block':
-#         print(p[1])
-#         for cmd in p[1]:
-#             execute(p[1])
-
-def avaliar_expr(expr):
-
-    if expr[0] == 'num':
-        return expr[1]
-    elif expr[0] == 'id':
-        return memory.get(expr[1], 0)
-    elif expr[0] == '=':
-        return avaliar_expr(expr[1]) == avaliar_expr(expr[2])
-    elif expr[0] == '<':
-        return avaliar_expr(expr[1]) < avaliar_expr(expr[2])
-    elif expr[0] == '+':
-        return avaliar_expr(expr[1]) + avaliar_expr(expr[2])
-    elif expr[0] == '-':
-        return avaliar_expr(expr[1]) - avaliar_expr(expr[2])
-    elif expr[0] == '*':
-        return avaliar_expr(expr[1]) * avaliar_expr(expr[2])
-    elif expr[0] == '/':
-        return avaliar_expr(expr[1]) / avaliar_expr(expr[2])
-    elif expr[0] == 'neg':
-        return -avaliar_expr(expr[1])
-    else:
-        raise Exception(f"Expressão desconhecida: {expr}")
-
 def execute_cmd(cmd):
     op = cmd[0]
 
@@ -428,10 +347,10 @@ def execute_cmd(cmd):
         if var not in memory:
             raise SemanticError(f"Variável {var} não declarada")
 
-        memory[var] = avaliar_expr(cmd[2])
+        memory[var] = eval_condition(cmd[2])
 
     elif op == 'if':
-        cond = avaliar_expr(cmd[1])
+        cond = eval_condition(cmd[1])
         if cond:
             execute_cmd(cmd[2])
         elif cmd[3] is not None:
@@ -443,10 +362,10 @@ def execute_cmd(cmd):
 
     elif op == 'while':
         print(f"\n\nCOND WHILE: {cmd[1]}\n\n")
-        cond = avaliar_expr(cmd[1])
+        cond = eval_condition(cmd[1])
         while cond:
             execute_cmd(cmd[2])
-            cond = avaliar_expr(cmd[1])
+            cond = eval_condition(cmd[1])
 
     elif op == 'print':
         exec_print(cmd[1])

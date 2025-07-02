@@ -1,0 +1,14 @@
+programa loop_infinito;
+
+/* exemplo de um while infinito */
+
+var a, b, c: inteiro;
+aa, bb: logico;
+aaa : inteiro;
+
+inicio
+    enquanto a < 2 faca
+    inicio
+        escrever(2);
+    fim;
+fim.

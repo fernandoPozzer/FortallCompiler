@@ -1,5 +1,5 @@
 
-def avaliar_ast(ast):
+def get_value(ast):
     from fortall_parser import memory
 
     if isinstance(ast, tuple):
@@ -25,11 +25,10 @@ def avaliar_ast(ast):
             if op == '*': return left * right
             if op == '/': return int(left / right)
 
-        # valor composto com produto (ex: value_or_prod)
         elif op == 'value_and_prod':
             left = avaliar_ast(ast[1])
             right = avaliar_ast(ast[2])
-            return left * right  # sempre multiplicação nesse caso
+            return left * right
 
         else:
             raise ValueError(f"Operação desconhecida: {op}")
@@ -42,7 +41,7 @@ def exec_print(p):
             print(part[1], end='')
         else:
             # print(part)
-            print(avaliar_ast(part), end='')
+            print(get_value(part), end='')
 
     print("")
 
@@ -58,9 +57,6 @@ def exec_read(p):
             raise SemanticError(f"Variável {var} não declarada")
 
         memory[var] = read_value
-
-def execute_code(p):
-    pass
 
 class SemanticError(Exception):
     pass

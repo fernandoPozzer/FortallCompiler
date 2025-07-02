@@ -10,5 +10,3 @@ with open(file_name, 'r', encoding='utf-8') as f:
 
 if not check_for_lex_errors(code):
     parser.parse(code)
-
-# print("x =", memory['x'])  # Deve imprimir x = 3
