@@ -274,9 +274,9 @@ def p_id_value(p):
     '''id_value : LOGICVALUE
                 | math_expr'''
     if p[1] == 'VERDADEIRO':
-        p[0] = ('logic', 1)
+        p[0] = 1
     elif p[1] == 'FALSO':
-        p[0] = ('logic', 0)
+        p[0] = 0
     else:
         p[0] = p[1]
 
