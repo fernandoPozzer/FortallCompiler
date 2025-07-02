@@ -1,5 +1,7 @@
 # FortallCompiler
 
+Trabalho de Fernando Pozzer
+
 ## Rodando o trabalho
 
 Este trabalho usa o pacote `ply` (python-lex-yacc), o qual pode ser instalado com o seguinte comando: `pip install ply`.
