@@ -1,0 +1,19 @@
+programa teste;
+
+/* compara dois numeros */
+
+var a, b : inteiro;
+
+inicio
+
+    escrever('digite 2 numeros');
+    ler(a, b);
+
+    se a = b entao 
+        escrever(a, ' eh igual a ', b)
+    senao
+        escrever(a, ' eh diferente de ', b);
+
+   
+
+fim.

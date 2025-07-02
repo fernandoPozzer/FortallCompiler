@@ -8,18 +8,21 @@ memory = {}
 def p_program(p):
     '''first_rule : PROGRAM ID SEMICOLON code_start'''
     p[0] = p[4]
-    # print(p[0])
-    execute(p[0])
-    # print(f"MEMORIA APOS FIM: {memory}")
 
-def p_stmt_list(p):
+    print(f"\nMEMORIA INICIAL: {memory}")
+    print(f"AST: {p[0]}\n\n")
+    execute(p[0])
+    print(f"\nMEMORIA APOS FIM: {memory}\n")
+
+def p_code_start(p):
     '''code_start : decl code_block PERIOD
                   | code_block PERIOD'''
 
-    if len(p) == 4 and p[1] is not None: # com decl
-        p[0] = (p[1], p[2])
-    else:
+    # como a decl ja foi feita, nao vai para a AST
+    if len(p) == 4:
         p[0] = p[2]
+    else:
+        p[0] = p[1]
 
 #################################
 # Declaracao de variaveis
@@ -38,7 +41,7 @@ def p_var_list(p):
         else: # logico
             memory[decl_var] = ['logico', 0]
 
-    print(f"declaration: {memory}")
+    # print(f"declaration: {memory}")
 
 def p_another_var_list(p):
     '''another_var_list : var_list
@@ -347,7 +350,7 @@ def execute_cmd(cmd):
         if var not in memory:
             raise SemanticError(f"Variável {var} não declarada")
 
-        memory[var] = eval_condition(cmd[2])
+        memory[var][1] = get_value(cmd[2])
 
     elif op == 'if':
         cond = eval_condition(cmd[1])
