@@ -364,7 +364,6 @@ def execute_cmd(cmd):
             execute_cmd(c)
 
     elif op == 'while':
-        print(f"\n\nCOND WHILE: {cmd[1]}\n\n")
         cond = eval_condition(cmd[1])
         while cond:
             execute_cmd(cmd[2])

@@ -1,0 +1,23 @@
+programa collatz;
+
+/* imprime a sequencia de collatz de um inteiro positivo */
+
+var x : inteiro;
+
+inicio
+
+    escrever('digite um numero positivo:');
+    ler(x);
+
+    escrever('sequencia de collatz de ', x, ':');
+
+    enquanto x <> 1 faca
+        inicio
+            se (x / 2) * 2 = x entao
+                x := x / 2
+            senao
+                x := 3 * x + 1;
+            
+            escrever(x);
+        fim; 
+fim.

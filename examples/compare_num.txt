@@ -1,4 +1,4 @@
-programa teste;
+programa compare_num;
 
 /* compara dois numeros */
 
@@ -11,9 +11,9 @@ inicio
 
     se a = b entao 
         escrever(a, ' eh igual a ', b)
+    senao se a < b entao
+        escrever(a, ' eh menor que ', b)
     senao
-        escrever(a, ' eh diferente de ', b);
-
-   
+        escrever(a, ' eh maior que ', b);
 
 fim.

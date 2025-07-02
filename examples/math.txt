@@ -1,4 +1,6 @@
-programa matematica;
+programa math;
+
+/* expressoes matematicas com resultado esperado */
 
 inicio
 
